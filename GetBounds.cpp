@@ -23,51 +23,37 @@ void GetBounds::_validate(bool for_real) {
 	Box inputbounds = Box(format.x(), format.y(), format.r(), format.t());
 	ImagePlane imagePlane = ImagePlane(inputbounds, true, channels);
 
-	//{
-	//	Guard guard(_lock);
-	//	if (_firstTime) {
-			RequestOutput reqData = RequestOutput();
-			getRequests(inputbounds, channels, 0, reqData);
-			input0().request(channels, 0);
 
-			Interest interest(input0(), inputbounds, imagePlane.channels(), true);
-			interest.unlock();
+	RequestOutput reqData = RequestOutput();
+	getRequests(inputbounds, channels, 0, reqData);
+	input0().request(channels, 0);
 
-			//if (_lastHash != input0().hash() || !_runOnce) {
-			if (input0().real_valid() && !input0().inErrorState() && !input0().inInvalidState()) {
-				if (input0().tryValidate() && interest.valid()) {
-					//only do this if the input hash has changed
-					running(true);
-					getBounds(imagePlane, format, interest);
+	Interest interest(input0(), inputbounds, imagePlane.channels(), true);
+	interest.unlock();
 
-					Box bounds(p[0], p[1], p[2], p[3]);
-					info_.set(bounds);
+	if (input0().real_valid() && !input0().inErrorState() && !input0().inInvalidState()) {
+		if (input0().tryValidate() && interest.valid()) {
+			//only do this if the input hash has changed
+			running(true);
+			getBounds(imagePlane, format, interest);
 
-					_lastHash = input0().hash();
-					running(false);
+			Box bounds(p[0], p[1], p[2], p[3]);
+			info_.set(bounds);
 
-					//Op::warning("Get Bounds set bounding box ");
-				}
-			}
-		//}
-		//_firstTime = false;
-	//}
+			_lastHash = input0().hash();
+			running(false);
+
+			//Op::warning("Get Bounds set bounding box ");
+		}
+	}
 
 	//Op::warning("Get Bounds validated ");
 
 }
 
 void GetBounds::getRequests(const Box& box, const ChannelSet& channelsSet, int count, RequestOutput& reqData) {
-	//channels = channelsSet;
 	return PlanarIop::getRequests(box, channelsSet, count, reqData);
 }
-
-/*const MetaData::Bundle& GetBounds::_fetchMetaData(const char* key)
-{
-	meta = Iop::_fetchMetaData(key);
-	meta.setData("data", p[0]);
-	return meta;
-}*/
 
 void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& interest) {
 	// these useful format variables are used later
@@ -84,9 +70,6 @@ void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& inte
 	bool yMaxFound = false;
 	bool xFound = false;
 	bool xMaxFound = false;
-
-	//Box& bbox = Box(imagePlane.bounds().x(), imagePlane.bounds().y(), imagePlane.bounds().r(), imagePlane.bounds().t());
-
 	//std::cerr << "operating on " + channels << std::endl;
 
 	//for each row
@@ -95,9 +78,6 @@ void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& inte
 
 		static string chanName = getName(z);
 		for (int y = imagePlane.bounds().y(); y != imagePlane.bounds().t(); y++) {
-
-			//Row row(fx, fr);
-			//row.get(input0(), y, imagePlane.bounds().x(), imagePlane.bounds().r(), channels);
 
 			float maxValue = 0;
 
@@ -180,15 +160,10 @@ void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& inte
 
 void GetBounds::renderStripe(ImagePlane& imagePlane)
 {
-	//Format format = input0().format();
 	input0().fetchPlane(imagePlane);
 	imagePlane.makeUnique();
-	//getBounds(imagePlane, format, input0());
-	//
 
 	//std::cerr << to_string(p[0]) + "," + to_string(p[1]) + "," + to_string(p[2]) + "," + to_string(p[3]) << std::endl;
-	//updateUI(outputContext());
-	//asapUpdate(imagePlane.bounds());
 }
 void GetBounds::knobs(Knob_Callback f) {
 	ChannelSet_knob(f, &channels, "channels");SetFlags(f, Knob::EARLY_STORE);
