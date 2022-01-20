@@ -24,15 +24,22 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.1
 linux compilation requirements (based on RHEL):
 
 mesa-libGL-devel
+
 mesa-libGLU-devel
+
 libXi-devel
+
 libXmu-devel
+
 freeglut-devel.x86_64
+
 
 linux build instructions:
 
 mkdir build && cd build
+
 cmake -DNUKE_INSTALL_PATH=/path/to/Nuke12.1v2/ ..
+
 make
 
 #Install
