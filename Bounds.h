@@ -12,6 +12,7 @@
 using namespace DD::Image;
 
 static const char* const HELP = "auto bbox"; // The tooltip you see when hovering above the Help-button in Nuke
+static const char* const InputLabel = "1"; 
 
 class GetBounds : public PlanarIop {
 	//int value[3]; // Create user variable for per-channel translation
@@ -65,6 +66,7 @@ public:
 
 	const char* Class() const { return dGet.name; }
 	const char* node_help() const { return HELP; }
+    const char* input_label(int n, char*) const { return InputLabel; }
 
 	virtual void knobs(Knob_Callback); // This is where knobs can be assigned
 	static const PlanarIop::Description dGet; // Make Nuke understand this node (at the bottom of the script more information on this)
