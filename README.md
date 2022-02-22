@@ -38,7 +38,7 @@ linux build instructions:
 
 mkdir build && cd build
 
-cmake -DNUKE_INSTALL_PATH=/path/to/Nuke12.1v2/ ..
+cmake ..
 
 make
 
