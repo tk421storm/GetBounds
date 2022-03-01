@@ -21,7 +21,7 @@ Environment Variables passed to tool:
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64\link.exe /ERRORREPORT:PROMPT /OUT:"[OUTPUT_Folder]\GetBounds.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\Nuke12.1v2" DDImage.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"[OUTPUT_FOLDER]\GetBounds.pdb" /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"[OUTPUT_FOLDER]\GetBounds.lib" /MACHINE:X64 /DLL x64\Release\ShiftRGB.obj
 
 # Build on Linux
-linux compilation requirements (based on RHEL):
+linux compilation requirements (based on CentOS 7):
 
 mesa-libGL-devel
 
@@ -33,12 +33,19 @@ libXmu-devel
 
 freeglut-devel.x86_64
 
+Used the scl devtoolset-6 environment to build. to install:
+yum install -y centos-release-scl                       
+curl -sSL https://raw.githubusercontent.com/wwfxuk/centos-vault-scl/master/activate.sh | sudo sh
+yum install -y devtoolset-6
 
-linux build instructions:
+then to activate the devtoolset-6 environment:
+scl enable devtoolset-6 bash
+
+finally, to build:
 
 mkdir build && cd build
 
-cmake ..
+Nuke_DIR=/path/toNuke cmake ..
 
 make
 
