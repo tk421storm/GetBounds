@@ -1,6 +1,5 @@
-// GetBounds - Max van Leeuwen - Copyright (C) 2017.
-// Example project for C++ compiling.
-// See www.maxvanleeuwen.com/nuke-ndk for more information.
+// GetBounds - Michael Millspaugh
+// www.tks-designs.com
 
 #include "Bounds.h"
 
@@ -38,7 +37,10 @@ void GetBounds::_validate(bool for_real) {
 			getBounds(imagePlane, format, interest);
 
 			Box bounds(p[0], p[1], p[2], p[3]);
-			info_.set(bounds);
+			//dont do it if the box is zero or negative (not sure why thats happening)
+			if (bounds.area() >= 1) {
+				info_.set(bounds);
+			};
 
 			_lastHash = input0().hash();
 			running(false);
@@ -115,7 +117,7 @@ void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& inte
 			};
 
 			//walk right to left
-			for (int x = imagePlane.bounds().r()+1; x-- > 0; ) {
+			for (int x = imagePlane.bounds().r() + 1; x-- > 0; ) {
 
 				//bounds will never get smaller after a value is found, so we can break once we pass the found point
 				//if (xMaxFound && x < p[2]) break;
@@ -130,8 +132,9 @@ void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& inte
 					if (!xMaxFound) {
 						p[2] = x;
 						xMaxFound = true;
-					} else {
-						if (x > p[2]) { p[2] = x+_extra; }
+					}
+					else {
+						if (x > p[2]) { p[2] = x + _extra; }
 					}
 					break;
 
@@ -141,15 +144,16 @@ void GetBounds::getBounds(ImagePlane& imagePlane, Format& format, Interest& inte
 
 			if (maxValue > 0) {
 				if (!yMinFound) {
-					p[1] = y-_extra;
+					p[1] = y - _extra;
 					yMinFound = true;
-				} else {
-					p[3] = y+_extra;
+				}
+				else {
+					p[3] = y + _extra;
 				}
 			};
 
 			if (maxValue == 0 && yMinFound && yMaxFound) {
-				p[3] = y+_extra;
+				p[3] = y + _extra;
 				yMaxFound = true;
 			}
 
